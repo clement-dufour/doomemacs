@@ -47,9 +47,11 @@
 
   ;; UX: Respect DEBUG envvar as an alternative to --debug-init, and to make
   ;;   startup sufficiently verbose from this point on.
-  (when (getenv-internal "DEBUG")
-    (setq init-file-debug t
-          debug-on-error t))
+  (let ((debug-env (getenv-internal "DEBUG")))
+    (when debug-env
+      (unless (string= debug-env "")
+        (setq init-file-debug t
+              debug-on-error t))))
 
   (let (;; FIX: Unset `command-line-args' in noninteractive sessions, to
         ;;   ensure upstream switches aren't misinterpreted.
